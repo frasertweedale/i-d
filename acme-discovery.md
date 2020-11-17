@@ -449,24 +449,25 @@ a DNS name rather than an IP address, and one or more DNS queries
 are necessary to resolve the host's DNS name to an IP address.
 
 When service discovery is used, the URI of the ACME server is
-obtained from a DNS URI record.  If an attacker is able to spoof the
-\_acme-server URI record for a candidate parent domain name, the
-attacker could cause service discovery to fail or could direct the
-client to an ACME server of the attacker's choosing.  This could
-constitute a denial of service attack against the client, against
-parties that validate certificates issued to the client, or against
-the target server.
+constructed from data obtained from an SRV and TXT record owned by a
+Service Instance Name.  The Service Instance Name itself comes from
+a PTR records.  If an attacker is able to spoof any of these SRV,
+TXT or PTR records, the attacker could cause service discovery to
+fail or could direct the client to an ACME server of the attacker's
+choosing.  This could lead to a denial of service attack against the
+client, against parties that validate certificates issued to the
+client, or against the target ACME server.
 
-Therefore it is RECOMMENDED that URI records used for ACME Service
-Discovery be secured using DNSSEC.  It is RECOMMENDED that ACME
-clients make DNS URI queries via DNSSEC-validating stub or recursive
-resolvers.
+Therefore it is RECOMMENDED that the PTR, SRV and TXT records used
+for ACME Service Discovery be secured using DNSSEC.  It is
+RECOMMENDED that ACME clients make these DNS queries via a
+DNSSEC-validating stub or recursive resolver.
 
 Some methods of candidate parent domain selection may involve DNS
-queries.  For example, a client could query PTR records to find a
-host name, from which it derives a candidate parent domain.
-Implementers must consider the security of DNS data used for parent
-domain selection.
+queries.  For example, a client could query PTR records for its IP
+address to learn its canonical fully qualified domain name, from
+which it derives a candidate parent domain.  Implementers must
+consider the security of DNS data used in parent domain selection.
 
 
 ## Service Instance Delegation
